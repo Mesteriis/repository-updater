@@ -8,6 +8,10 @@ repos:
       - id: check-executables-have-shebangs
       - id: detect-private-key
       - id: end-of-file-fixer
+  - repo: https://github.com/PyCQA/pylint
+    rev: pylint-2.4.2
+    hooks:
+      - id: pylint
   - repo: https://github.com/jumanjihouse/pre-commit-hooks
     # Require ruby-dev package installed:
     rev: 1.11.2
