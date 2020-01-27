@@ -62,12 +62,12 @@ class PyTest(TestCommand):
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 
-with io.open(ROOT_DIR + 'README.md', encoding='utf-8') as file:
+with io.open(ROOT_DIR + '/README.md', encoding='utf-8') as file:
     LONG_DESCRIPTION = file.read()
     LONG_DESCRIPTION_TYPE = 'text/markdown'
 
-REQUIREMENTS = list(open(ROOT_DIR + 'requirements.txt'))
-TEST_REQUIREMENTS = list(open(ROOT_DIR + 'requirements-tests.txt'))
+REQUIREMENTS = list(open(ROOT_DIR + '/requirements.txt'))
+TEST_REQUIREMENTS = list(open(ROOT_DIR + '/requirements-tests.txt'))
 
 setup(
     name=APP_NAME,
