@@ -2,6 +2,7 @@
 # MIT License
 #
 # Copyright (c) 2018-2020 Franck Nijhof
+# Copyright (c) 2020 Andrey "Limych" Khrolenok
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,28 +25,56 @@
 """
 Hass.io add-ons repository updater setup
 """
-from setuptools import setup, find_packages
+import io
+import sys
 
-from repositoryupdater import (
-    __author__, __email__, __license__, __url__, __download__,
-    APP_NAME, APP_VERSION, APP_DESCRIPTION
-)
+from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
+
+from repositoryupdater import APP_NAME, APP_VERSION, APP_DESCRIPTION, __author__, __email__, \
+    __license__, __url__, __download__, __keywords__
+
+
+class PyTest(TestCommand):
+    # Code from here:
+    # https://docs.pytest.org/en/latest/goodpractices.html#manual-integration
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        # we don't run integration tests which need an actual repositoryupdater device
+        self.test_args = ['-m', 'not integration']
+        self.test_suite = True
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        import shlex
+
+        errno = pytest.main(shlex.split(self.pytest_args))
+        sys.exit(errno)
+
+
+with io.open('README.md', encoding='utf-8') as file:
+    LONG_DESCRIPTION = file.read()
+    LONG_DESCRIPTION_TYPE = 'text/markdown'
+
+REQUIREMENTS = list(open('requirements.txt'))
+TEST_REQUIREMENTS = list(open('requirements-tests.txt'))
 
 setup(
     name=APP_NAME,
     version=APP_VERSION,
+    description=APP_DESCRIPTION.split('\n')[0],
     author=__author__,
     author_email=__email__,
-    description=APP_DESCRIPTION.split('\n')[0],
-    long_description=APP_DESCRIPTION,
     license=__license__,
     url=__url__,
-    download_url=__download__,
-    keywords=[
-        'hassio', 'hass.io', 'addons', 'repository', 'home assistant',
-        'home-assistant', 'add-ons', 'frenck'
-    ],
     platforms='any',
+    download_url=__download__,
+    keywords=__keywords__,
+    install_requires=REQUIREMENTS,
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type=LONG_DESCRIPTION_TYPE,
     classifiers=[
         'Environment :: Console',
         'Intended Audience :: Developers',
@@ -56,20 +85,12 @@ setup(
         'Topic :: Software Development :: Build Tools',
         'Topic :: Utilities'
     ],
+    cmdclass={'pytest': PyTest},
+    tests_require=TEST_REQUIREMENTS,
     packages=find_packages(),
-    install_requires=[
-        'click==7.0',
-        'crayons==0.3.0',
-        'GitPython==3.0.5',
-        'Jinja2==2.10.3',
-        'PyGithub==1.45',
-        'python-dateutil==2.8.1',
-        'PyYAML==5.2',
-        'semver==2.9.0',
-    ],
     entry_points='''
-        [console_scripts]
-            repository-updater=repositoryupdater.cli:repository_updater
-            repository-updater-git-askpass=repositoryupdater.cli:git_askpass
-    '''
+    [console_scripts]
+        repository-updater=repositoryupdater.cli:repository_updater
+        repository-updater-git-askpass=repositoryupdater.cli:git_askpass
+'''
 )

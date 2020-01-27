@@ -164,6 +164,7 @@ class Repository:
             for ch in channels:
                 self.addons.append(
                     Addon(
+                        self,
                         self.git_repo,
                         target + ('-' + ch if ch != self.channel else ''),
                         addon_config["image"],
@@ -175,7 +176,6 @@ class Repository:
                                 or addon_config["repository"] == addon
                                 or target == addon
                         ),
-                        self.dryrun,
                     )
                 )
         click.echo(crayons.cyan("-" * 50, bold=True))

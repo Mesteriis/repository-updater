@@ -95,3 +95,4 @@ pyvenv.cfg
 pip-selfcheck.json
 
 .env*
+/test*.*

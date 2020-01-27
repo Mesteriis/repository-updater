@@ -48,3 +48,7 @@ __download__ = (
         "https://github.com/Limych/repository-updater/archive/" + APP_VERSION + ".tar.gz"
 )
 __version__ = APP_VERSION
+__keywords__ = [
+    'hassio', 'hass.io', 'addons', 'repository', 'home assistant', 'home-assistant', 'add-ons',
+    'limych'
+]
