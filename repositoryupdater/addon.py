@@ -2,6 +2,7 @@
 # MIT License
 #
 # Copyright (c) 2018-2020 Franck Nijhof
+# Copyright (c) 2020 Andrey "Limych" Khrolenok
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -78,6 +79,7 @@ class Addon:
         addon_target: str,
         channel: str,
         updating: bool,
+        dryrun: bool,
     ):
         """Initialize a new Hass.io add-on object."""
         self.repository_target = repository_target
@@ -88,6 +90,7 @@ class Addon:
         self.archs = ["aarch64", "amd64", "armhf", "armv7", "i386"]
         self.latest_is_release = True
         self.updating = updating
+        self.dryrun = dryrun
         self.channel = channel
         self.current_version = None
         self.latest_release = None
@@ -183,13 +186,23 @@ class Addon:
             if release.draft or (prerelease and channel != CHANNEL_BETA):
                 continue
             self.latest_release = release
+            ref = self.addon_repository.get_git_ref("tags/" + release.tag_name)
+            self.latest_commit = self.addon_repository.get_commit(ref.object.sha)
             break
 
-        if self.latest_release:
-            ref = self.addon_repository.get_git_ref(
-                "tags/" + self.latest_release.tag_name
-            )
-            self.latest_commit = self.addon_repository.get_commit(ref.object.sha)
+        if not self.latest_release:
+            for tag in self.addon_repository.get_tags():
+                self.latest_version = tag.name.lstrip("v")
+                try:
+                    prerelease = semver.parse_version_info(self.latest_version).prerelease
+                except ValueError:
+                    continue
+                if prerelease and channel != CHANNEL_BETA:
+                    continue
+                ref = self.addon_repository.get_git_ref("tags/" + tag.name)
+                self.latest_commit = self.addon_repository.get_commit(ref.object.sha)
+                self.latest_is_release = False
+                break
 
         if channel == CHANNEL_EDGE:
             last_commit = self.addon_repository.get_commits()[0]
@@ -254,15 +267,16 @@ class Addon:
         config["version"] = self.current_version
         config["image"] = self.image
 
-        with open(
-            os.path.join(
-                self.repository.working_dir, self.repository_target, "config.json"
-            ),
-            "w",
-        ) as outfile:
-            json.dump(
-                config, outfile, ensure_ascii=False, indent=2, separators=(",", ": ")
-            )
+        if not self.dryrun:
+            with open(
+                os.path.join(
+                    self.repository.working_dir, self.repository_target, "config.json"
+                ),
+                "w",
+            ) as outfile:
+                json.dump(
+                    config, outfile, ensure_ascii=False, indent=2, separators=(",", ": ")
+                )
 
         click.echo(crayons.green("Done"))
 
@@ -282,13 +296,14 @@ class Addon:
         else:
             changelog += "- %s\n" % (self.current_commit.commit.message)
 
-        with open(
-            os.path.join(
-                self.repository.working_dir, self.repository_target, "CHANGELOG.md"
-            ),
-            "w",
-        ) as outfile:
-            outfile.write(changelog)
+        if not self.dryrun:
+            with open(
+                os.path.join(
+                    self.repository.working_dir, self.repository_target, "CHANGELOG.md"
+                ),
+                "w",
+            ) as outfile:
+                outfile.write(changelog)
 
         click.echo(crayons.green("Done"))
 
@@ -314,10 +329,12 @@ class Addon:
             pass
 
         if remote_file:
-            urllib.request.urlretrieve(remote_file.download_url, local_file)
+            if not self.dryrun:
+                urllib.request.urlretrieve(remote_file.download_url, local_file)
             click.echo(crayons.green("Done"))
         elif os.path.isfile(local_file):
-            os.remove(os.path.join(local_file))
+            if not self.dryrun:
+                os.remove(os.path.join(local_file))
             click.echo(crayons.yellow("Removed"))
         else:
             click.echo(crayons.blue("Skipping"))
@@ -364,12 +381,13 @@ class Addon:
             extensions=["jinja2.ext.loopcontrols"],
         )
 
-        with open(local_file, "w") as outfile:
-            outfile.write(
-                jinja.from_string(remote_file.decoded_content.decode("utf8")).render(
-                    **data
+        if not self.dryrun:
+            with open(local_file, "w") as outfile:
+                outfile.write(
+                    jinja.from_string(remote_file.decoded_content.decode("utf8")).render(
+                        **data
+                    )
                 )
-            )
 
         click.echo(crayons.green("Done"))
 

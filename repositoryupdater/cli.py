@@ -2,6 +2,7 @@
 # MIT License
 #
 # Copyright (c) 2018-2020 Franck Nijhof
+# Copyright (c) 2020 Andrey "Limych" Khrolenok
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -53,17 +54,23 @@ from .repository import Repository
 )
 @click.option("--addon", help="Update a single/specific add-on", metavar="<TARGET>")
 @click.option("--force", is_flag=True, help="Force an update of the add-on repository")
+@click.option("--dryrun", "--dry-run", "--simulate", is_flag=True,
+              help="Do everything which is supposed to be done, but don't write any changes. This "
+                   "is used to see what would happen with the specified action, without actually "
+                   "modifying anything.")
 @click.version_option(APP_VERSION, prog_name=APP_FULL_NAME)
-def repository_updater(token, repository, addon, force):
+def repository_updater(token, repository, addon, force, dryrun):
     """Community Hass.io Add-ons Repository Updater."""
     click.echo(crayons.blue(APP_FULL_NAME, bold=True))
     click.echo(crayons.blue("-" * 50, bold=True))
+    if dryrun:
+        click.echo(crayons.red("Dry Run Mode Enabled!", bold=True))
     github = GitHub(token)
     click.echo(
         "Authenticated with GitHub as %s"
         % crayons.yellow(github.get_user().name, bold=True)
     )
-    repository = Repository(github, repository, addon, force)
+    repository = Repository(github, repository, addon, force, dryrun)
     repository.update()
     repository.cleanup()
 

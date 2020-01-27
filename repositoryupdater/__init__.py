@@ -2,6 +2,7 @@
 # MIT License
 #
 # Copyright (c) 2018-2020 Franck Nijhof
+# Copyright (c) 2020 Andrey "Limych" Khrolenok
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,18 +34,17 @@ Please note, this program cannot be used with the general documented
 Hass.io add-on repository approach.
 """
 
-
 APP_NAME = "repository-updater"
 APP_FULL_NAME = "Community Hass.io Add-ons Repository Updater"
-APP_VERSION = "0.3.0"
+APP_VERSION = "0.4.0"
 APP_DESCRIPTION = __doc__
 
-__author__ = "Franck Nijhof"
-__email__ = "frenck@addons.community"
-__copyright__ = "Copyright 2018-2020, Franck Nijhof"
+__author__ = "Andrey Khrolenok"
+__email__ = "andrey@khrolenok.ru"
+__copyright__ = "Copyright 2020, Andrey Khrolenok, 2018-2020, Franck Nijhof"
 __license__ = "MIT"
-__url__ = "https://github.com/hassio-addons/repository-updater"
+__url__ = "https://github.com/Limych/repository-updater"
 __download__ = (
-    "https://github.com/hassio-addons/repository-updater/archive/0.3.0.tar.gz"
+        "https://github.com/Limych/repository-updater/archive/" + APP_VERSION + ".tar.gz"
 )
 __version__ = APP_VERSION

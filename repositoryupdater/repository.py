@@ -2,6 +2,7 @@
 # MIT License
 #
 # Copyright (c) 2018-2020 Franck Nijhof
+# Copyright (c) 2020 Andrey "Limych" Khrolenok
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -54,12 +55,14 @@ class Repository:
     github_repository: GitHubRepository
     git_repo: Repo
     force: bool
+    dryrun: bool
     channel: str
 
-    def __init__(self, github: GitHub, repository: str, addon: str, force: bool):
+    def __init__(self, github: GitHub, repository: str, addon: str, force: bool, dryrun: bool):
         """Initialize new add-on Repository object."""
         self.github = github
         self.force = force
+        self.dryrun = dryrun
         self.addons = []
 
         click.echo(
@@ -154,21 +157,27 @@ class Repository:
         for target, addon_config in config["addons"].items():
             click.echo(crayons.cyan("-" * 50, bold=True))
             click.echo(crayons.cyan(f"Loading add-on {target}"))
-            self.addons.append(
-                Addon(
-                    self.git_repo,
-                    target,
-                    addon_config["image"],
-                    self.github.get_repo(addon_config["repository"]),
-                    addon_config["target"],
-                    self.channel,
-                    (
-                        not addon
-                        or addon_config["repository"] == addon
-                        or target == addon
-                    ),
+            channels = [self.channel]
+            if addon_config.get("channels"):
+                channels = [i.strip() for i in str(addon_config["channels"]).split(',')]
+                click.echo("Add-on channels: %s" % crayons.magenta(', '.join(channels)))
+            for ch in channels:
+                self.addons.append(
+                    Addon(
+                        self.git_repo,
+                        target + ('-' + ch if ch != self.channel else ''),
+                        addon_config["image"],
+                        self.github.get_repo(addon_config["repository"]),
+                        addon_config["target"],
+                        ch,
+                        (
+                                not addon
+                                or addon_config["repository"] == addon
+                                or target == addon
+                        ),
+                        self.dryrun,
+                    )
                 )
-            )
         click.echo(crayons.cyan("-" * 50, bold=True))
         click.echo("Done loading all repository add-ons")
 
@@ -202,18 +211,19 @@ class Repository:
             extensions=["jinja2.ext.loopcontrols"],
         )
 
-        with open(os.path.join(self.git_repo.working_dir, "README.md"), "w") as outfile:
-            outfile.write(
-                jinja.get_template(".README.j2").render(
-                    addons=addon_data,
-                    channel=self.channel,
-                    description=self.github_repository.description,
-                    homepage=self.github_repository.homepage,
-                    issues=self.github_repository.issues_url,
-                    name=self.github_repository.full_name,
-                    repo=self.github_repository.html_url,
+        if not self.dryrun:
+            with open(os.path.join(self.git_repo.working_dir, "README.md"), "w") as outfile:
+                outfile.write(
+                    jinja.get_template(".README.j2").render(
+                        addons=addon_data,
+                        channel=self.channel,
+                        description=self.github_repository.description,
+                        homepage=self.github_repository.homepage,
+                        issues=self.github_repository.issues_url,
+                        name=self.github_repository.full_name,
+                        repo=self.github_repository.html_url,
+                    )
                 )
-            )
 
         click.echo(crayons.green("Done"))
 
