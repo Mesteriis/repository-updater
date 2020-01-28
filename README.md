@@ -7,7 +7,6 @@
 ![Project Stage][project-stage-shield]
 ![Project Maintenance][maintenance-shield]
 
-[![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
 ## About
@@ -286,7 +285,7 @@ SOFTWARE.
 [commits]: https://github.com/Limych/repository-updater/commits/master
 [contributors]: https://github.com/Limych/repository-updater/graphs/contributors
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
-[forum]: https://community.home-assistant.io?u=frenck
+[forum]: https://community.home-assistant.io
 [frenck]: https://github.com/frenck
 [limych]: https://github.com/Limych
 [issue]: https://github.com/Limych/repository-updater/issues
@@ -294,9 +293,9 @@ SOFTWARE.
 [license-shield]: https://img.shields.io/github/license/Limych/repository-updater.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2020.svg
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
-[pypi-shield]: https://img.shields.io/pypi/v/repository-updater.svg
-[pypi]: https://pypi.org/project/repository-updater
-[releases]: https://github.com/Limych/repository-updater/releases
+[pypi-shield]: https://img.shields.io/pypi/v/hassio-repo-updater.svg
+[pypi]: https://pypi.org/project/hassio-repo-updater
+[releases]: https://img.shields.io/github/tag-date/Limych/repository-updater?label=release
 [repository]: https://github.com/Limych/repository
 [semver]: http://semver.org/spec/v2.0.0.html
 [token]: https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
