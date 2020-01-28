@@ -45,8 +45,8 @@ __copyright__ = "Copyright 2020, Andrey Khrolenok; 2018-2020, Franck Nijhof"
 __license__ = "MIT"
 __url__ = "https://github.com/Limych/repository-updater"
 __download__ = (
-        "https://github.com/Limych/repository-updater/archive/" + APP_VERSION
-        + ".tar.gz"
+    "https://github.com/Limych/repository-updater/archive/" + APP_VERSION
+    + ".tar.gz"
 )
 __version__ = APP_VERSION
 __keywords__ = [

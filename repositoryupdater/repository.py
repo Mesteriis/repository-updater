@@ -181,11 +181,8 @@ class Repository:
                         self.github.get_repo(addon_config["repository"]),
                         addon_config["target"],
                         chl,
-                        (
-                            not addon
-                            or addon_config["repository"] == addon
-                            or target == addon
-                        ),
+                        (not addon or addon_config[
+                            "repository"] == addon or target == addon),
                     )
                 )
         click.echo(crayons.cyan("-" * 50, bold=True))

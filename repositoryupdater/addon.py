@@ -51,7 +51,7 @@ from .dockerhub import DockerHub
 class Addon:
     """Object representing an Hass.io add-on."""
 
-    repository: 'Repository'
+    repository: 'Repository'    # noqa: F821
     repository_target: str
     addon_target: str
     image: str
@@ -74,7 +74,7 @@ class Addon:
 
     def __init__(
             self,
-            repository: 'Repository',
+            repository: 'Repository',   # noqa: F821
             git_repository: Repo,
             repository_target: str,
             image: str,
