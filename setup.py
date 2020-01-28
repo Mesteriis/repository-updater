@@ -60,7 +60,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+ROOT_DIR = os.path.dirname(__file__)
 
 with io.open(ROOT_DIR + '/README.md', encoding='utf-8') as file:
     LONG_DESCRIPTION = file.read()
