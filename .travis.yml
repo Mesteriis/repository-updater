@@ -15,6 +15,7 @@ script: tox
 cache: pip
 after_success: coveralls
 deploy:
+  skip_cleanup: true
   provider: pypi
   user: Limych
   password:
