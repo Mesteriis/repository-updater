@@ -293,6 +293,9 @@ class Addon:
         config = json.loads(config.decoded_content)
         config["version"] = self.current_version
         config["image"] = self.image
+        if self.channel != self.repository.channel:
+            config["name"] += ' (%s)' % self.channel
+            config["slug"] += '__%s' % self.channel
 
         if not self.repository.dryrun:
             with open(
