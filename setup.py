@@ -39,6 +39,7 @@ from repositoryupdater import (
 
 class PyTest(TestCommand):
     """ PyTest controller. """
+
     # Code from here:
     # https://docs.pytest.org/en/latest/goodpractices.html#manual-integration
 
