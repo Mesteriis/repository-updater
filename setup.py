@@ -26,7 +26,6 @@
 Hass.io add-ons repository updater setup
 """
 import io
-import os
 import sys
 
 from setuptools import setup, find_packages
@@ -60,14 +59,12 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-ROOT_DIR = os.path.dirname(__file__)
-
-with io.open(ROOT_DIR + '/README.md', encoding='utf-8') as file:
+with io.open('README.md', encoding='utf-8') as file:
     LONG_DESCRIPTION = file.read()
     LONG_DESCRIPTION_TYPE = 'text/markdown'
 
-REQUIREMENTS = list(open(ROOT_DIR + '/requirements.txt'))
-TEST_REQUIREMENTS = list(open(ROOT_DIR + '/requirements-tests.txt'))
+REQUIREMENTS = list(open('requirements.txt'))
+TEST_REQUIREMENTS = list(open('requirements-tests.txt'))
 
 setup(
     name=APP_NAME,
