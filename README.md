@@ -165,6 +165,7 @@ list contains the following variables:
   - **aarch64**: `aarch64` DockerHub image (if arch is supported)
   - **amd64**: `amd64` DockerHub image (if arch is supported)
   - **armhf**: `armhf` DockerHub image (if arch is supported)
+  - **armv7**: `armv7` DockerHub image (if arch is supported)
   - **i386**: `i386` DockerHub image (if arch is supported)
 - **version**: The version of the add-on
 - **commit**: Full SHA of the commit bound to the current version
