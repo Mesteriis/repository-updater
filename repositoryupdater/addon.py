@@ -152,12 +152,6 @@ class Addon:
 
         current_config = json.load(open(current_config_file))
         self.current_version = current_config["version"]
-        self.name = current_config["name"]
-        self.description = current_config["description"]
-        self.slug = current_config["slug"]
-        self.url = current_config["url"]
-        if "arch" in current_config:
-            self.archs = current_config["arch"]
 
         current_parsed_version = False
         try:
@@ -170,8 +164,14 @@ class Addon:
                 ref = self.addon_repository.get_git_ref(
                     "tags/" + self.current_version)
             except UnknownObjectException:
-                ref = self.addon_repository.get_git_ref(
-                    "tags/v" + self.current_version)
+                try:
+                    ref = self.addon_repository.get_git_ref(
+                        "tags/v" + self.current_version)
+                except UnknownObjectException:
+                    click.echo("Current version: %s" % crayons.yellow(
+                        "Not available"))
+                    self.current_version = None
+                    return False
             self.current_commit = self.addon_repository.get_commit(
                 ref.object.sha)
         else:
@@ -184,6 +184,13 @@ class Addon:
                 crayons.magenta(self.current_version),
                 self.current_commit.sha[:7])
         )
+
+        self.name = current_config["name"]
+        self.description = current_config["description"]
+        self.slug = current_config["slug"]
+        self.url = current_config["url"]
+        if "arch" in current_config:
+            self.archs = current_config["arch"]
 
     def __load_latest_info(self, channel: str):
         """Determine latest available add-on version and config."""
