@@ -4,5 +4,5 @@ GitPython~=3.0
 Jinja2~=2.11
 PyGithub~=1.45
 python-dateutil~=2.8
-PyYAML~=5.3
+PyYAML~=5.2
 semver~=2.9

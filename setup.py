@@ -46,7 +46,7 @@ class PyTest(TestCommand):
     # pylint: disable=W0201
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        # we don't run integration tests which need an actual repositoryupdater
+        # we don't run integration tests
         self.test_args = ['-m', 'not integration']
         self.test_suite = True
 
