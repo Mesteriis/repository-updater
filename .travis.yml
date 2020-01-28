@@ -1,14 +1,14 @@
 language: python
 jobs:
   include:
-    - python: '3.5'
-      env: TOXENV=py35
-    - python: '3.6'
-      env: TOXENV=py36
-    - python: '3.7'
-      env: TOXENV=py37
-    - python: '3.8'
-      env: TOXENV=lint
+  - python: '3.5'
+    env: TOXENV=py35
+  - python: '3.6'
+    env: TOXENV=py36
+  - python: '3.7'
+    env: TOXENV=py37
+  - python: '3.8'
+    env: TOXENV=lint
 install: pip install -U tox-travis coveralls
 script: tox
 cache: pip
@@ -16,9 +16,9 @@ after_success: coveralls
 deploy:
   provider: pypi
   skip_cleanup: true
-  user: Limych
+  user: "__token__"
   password:
-    secure: dE6KZG616TsPqE2/5Q/0S9LQOotTwpYRwEuVPhFzgGsyIlJvckgJTW5HcVFIH9RhKeqf/Jtn9KBn7dDgrzspOtuVTkXf9h0QE9VWmwqRCj8b3P2XbJVeL9SPk8cVcLGMr/1Ho5Kw6EY/QbwXaJFTthAVYgeU7lk0K+bs1S4R452QgAMadlXIgw9qwyEIndAfQofDHKA1LVlZNvoHb6Z/DQTO56qswlba2ZDpnlQLS0n0BsrGMFJoKwA8Z4vD0K5C/jpsj2jKlBL2RyqmkRD7cp+lMowCmOlOQ4c1/iDU2m136JAhPj0QyQ3Nq9ngg138h7kNXIgToscGfOlpDNVfeG8i6IVRTfPwmPvSwaL6KccPA6pMAiiXSdqSh0sa35mUYAsUwWyuKMXdHdXpNFuOme1D8zLoBo1JN3g3sOcgYOHUqv2/HYNzCkOQPburbrnUaAKIgbR/RjDGp2c41KrDNHPps7E5X/RQy+4c8T/6T1PedhUCPFhndRor3LSMsPV8/bhfOkjTJ1HiRD9uOJQeDJ60v+21wU52J5JgacFbOi2xnw/eNR5rLcVNDFIRMEBxS1ZTgc2mwf3pe5WpR2UmoBfG1PEqTKJ+mnQUVqpKJJLguehssn1uZzkcUbDBs6o4SJ9yP1oFuFOQoDFBcVeIq7Obz2OpFFtnWp7o5+g+wr8=
+    secure: NuogxDnVFm2IOAxEiKjpMm8Msnfuu+9Up9pN3cicMzl8f/Vqy0J9egRu0vVxew45qP6Emuf2Lxkp/1iofYZjOx2fk0oIBhNo2aA/C7dQ0jI2OcQ4t7vr1DPYdN1iuQcjfc6/iKbgYwXjRRv4yyq26ZSraqoMSGUdyyGNxrYWl3KIcRMgKxO1wdzwh4ckOkdqJcvBxp4gUeT/b6NOprhMcBtPEjhkyc5kdaidrD5079g3+kPcpdoFQwzQ67d7wVzC7LY0j+FFyXVJO8DvWNtd8hewIpaybWWF6NXp/0RyQb82KItFMtpaLMgs0+ZpDjsEr8dwdSJJrv6RCl3rHcZQiI+sWk2++giaPB3XHpW0w+EZyUfQGUpFwgC3EHtDrEQQaaAkV2oNM9CDK03sGI4bDv62A5Mlj70SKxRMBJ6VJ/mhEIgOLvCatpwIsaJKgIwpsjB8vLm6XeCXBdLCBgJfEkDE2j6mOsLvEmfTxUOqxvigcuqga8/i51Y3K/UBrRdQZG45bvDlbdeHNO/tB6qnVGK44op3nmDs7t1tW/OCngfD7nPYhHvMD2p3uDqZN2iiVmgcw6hIrQ3fWInj5QDWN3X8l9DTDZmJbScf/2kXIyzPNuPKFMUApQuC7vII5bHLsojmSfObUFVF+m7UOTJ3vWG+sfW0NAkaK+tu/OQuIT0=
   on:
     branch: master
   skip_existing: true
