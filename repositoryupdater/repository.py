@@ -28,6 +28,8 @@ Repository module.
 Contains the add-ons repository representation / configuration
 and handles the automated maintenance / updating of it.
 """
+
+# pylint: disable=E0401,E0611
 import os
 import shutil
 import sys
@@ -35,12 +37,12 @@ import tempfile
 from typing import List
 
 import click
+import crayons
+import yaml
 from git import Repo
 from github.GithubException import UnknownObjectException
 from github.Repository import Repository as GitHubRepository
 from jinja2 import Environment, FileSystemLoader
-import yaml
-import crayons
 
 from .addon import Addon
 from .const import CHANNELS
@@ -58,7 +60,8 @@ class Repository:
     dryrun: bool
     channel: str
 
-    def __init__(self, github: GitHub, repository: str, addon: str, force: bool, dryrun: bool):
+    def __init__(self, github: GitHub, repository: str, addon: str,
+                 force: bool, dryrun: bool):
         """Initialize new add-on Repository object."""
         self.github = github
         self.force = force
@@ -66,7 +69,8 @@ class Repository:
         self.addons = []
 
         click.echo(
-            'Locating add-on repository "%s"...' % crayons.yellow(repository), nl=False
+            'Locating add-on repository "%s"...' % crayons.yellow(repository),
+            nl=False
         )
         self.github_repository = github.get_repo(repository)
         click.echo(crayons.green("Found!"))
@@ -82,12 +86,14 @@ class Repository:
         for addon in self.addons:
             if addon.needs_update(self.force):
                 click.echo(crayons.green("-" * 50, bold=True))
-                click.echo(crayons.green(f"Updating add-on {addon.repository_target}"))
+                click.echo(crayons.green(
+                    f"Updating add-on {addon.repository_target}"))
                 needs_push = self.update_addon(addon) or needs_push
 
         if needs_push:
             click.echo(crayons.green("-" * 50, bold=True))
-            click.echo("Pushing updates onto Git add-ons repository...", nl=False)
+            click.echo("Pushing updates onto Git add-ons repository...",
+                       nl=False)
             self.git_repo.git.push()
             click.echo(crayons.green("Done"))
 
@@ -142,7 +148,8 @@ class Repository:
         if not config["channel"] in CHANNELS:
             click.echo(
                 crayons.red(
-                    'Channel "%s" is not a valid channel identifier' % config["channel"]
+                    'Channel "%s" is not a valid channel identifier' % config[
+                        "channel"]
                 )
             )
             sys.exit(1)
@@ -151,7 +158,8 @@ class Repository:
         click.echo("Repository channel: %s" % crayons.magenta(self.channel))
 
         if addon:
-            click.echo(crayons.yellow('Only updating addon "%s" this run!' % addon))
+            click.echo(
+                crayons.yellow('Only updating addon "%s" this run!' % addon))
 
         click.echo("Start loading repository add-ons:")
         for target, addon_config in config["addons"].items():
@@ -159,22 +167,24 @@ class Repository:
             click.echo(crayons.cyan(f"Loading add-on {target}"))
             channels = [self.channel]
             if addon_config.get("channels"):
-                channels = [i.strip() for i in str(addon_config["channels"]).split(',')]
-                click.echo("Add-on channels: %s" % crayons.magenta(', '.join(channels)))
-            for ch in channels:
+                channels = [i.strip() for i in
+                            str(addon_config["channels"]).split(',')]
+                click.echo("Add-on channels: %s" % crayons.magenta(
+                    ', '.join(channels)))
+            for chl in channels:
                 self.addons.append(
                     Addon(
                         self,
                         self.git_repo,
-                        target + ('-' + ch if ch != self.channel else ''),
+                        target + ('-' + chl if chl != self.channel else ''),
                         addon_config["image"],
                         self.github.get_repo(addon_config["repository"]),
                         addon_config["target"],
-                        ch,
+                        chl,
                         (
-                                not addon
-                                or addon_config["repository"] == addon
-                                or target == addon
+                            not addon
+                            or addon_config["repository"] == addon
+                            or target == addon
                         ),
                     )
                 )
@@ -191,9 +201,11 @@ class Repository:
 
     def generate_readme(self):
         """Re-generate the repository readme based on a template."""
-        click.echo("Re-generating add-on repository README.md file...", nl=False)
+        click.echo("Re-generating add-on repository README.md file...",
+                   nl=False)
 
-        if not os.path.exists(os.path.join(self.git_repo.working_dir, ".README.j2")):
+        if not os.path.exists(
+                os.path.join(self.git_repo.working_dir, ".README.j2")):
             click.echo(crayons.blue("skipping"))
             return
 
@@ -212,7 +224,8 @@ class Repository:
         )
 
         if not self.dryrun:
-            with open(os.path.join(self.git_repo.working_dir, "README.md"), "w") as outfile:
+            with open(os.path.join(self.git_repo.working_dir, "README.md"),
+                      "w") as outfile:
                 outfile.write(
                     jinja.get_template(".README.j2").render(
                         addons=addon_data,

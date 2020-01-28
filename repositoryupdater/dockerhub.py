@@ -2,6 +2,7 @@
 # MIT License
 #
 # Copyright (c) 2018-2020 Franck Nijhof
+# Copyright (c) 2020 Andrey "Limych" Khrolenok
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +38,8 @@ class DockerHub:
     def image_exists_on_dockerhub(name, version):
         """Check if give image and version exists on Docker Hub."""
         location = (
-            f"https://registry.hub.docker.com/v2/repositories/{name}/tags/{version}/"
+            "https://registry.hub.docker.com/v2/repositories/%s/tags/%s/" % (
+                name, version)
         )
         request = urllib.request.Request(location)
         request.get_method = lambda: "HEAD"

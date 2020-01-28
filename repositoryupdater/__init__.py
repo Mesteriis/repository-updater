@@ -41,14 +41,15 @@ APP_DESCRIPTION = __doc__
 
 __author__ = "Andrey Khrolenok"
 __email__ = "andrey@khrolenok.ru"
-__copyright__ = "Copyright 2020, Andrey Khrolenok, 2018-2020, Franck Nijhof"
+__copyright__ = "Copyright 2020, Andrey Khrolenok; 2018-2020, Franck Nijhof"
 __license__ = "MIT"
 __url__ = "https://github.com/Limych/repository-updater"
 __download__ = (
-        "https://github.com/Limych/repository-updater/archive/" + APP_VERSION + ".tar.gz"
+        "https://github.com/Limych/repository-updater/archive/" + APP_VERSION
+        + ".tar.gz"
 )
 __version__ = APP_VERSION
 __keywords__ = [
-    'hassio', 'hass.io', 'addons', 'repository', 'home assistant', 'home-assistant', 'add-ons',
-    'limych'
+    'hassio', 'hass.io', 'addons', 'repository', 'home assistant',
+    'home-assistant', 'add-ons', 'limych'
 ]

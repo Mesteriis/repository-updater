@@ -3,7 +3,7 @@
 import os
 from unittest import TestCase
 
-import requests_mock    # pylint: disable=E0401
+import requests_mock  # pylint: disable=E0401
 
 from repositoryupdater.dockerhub import DockerHub
 
@@ -17,8 +17,8 @@ def load_fixture(filename):
 
 def dockerhub_url(name, version):
     """ DockerHub URL """
-    return "https://registry.hub.docker.com/v2/repositories" \
-           f"/{name}/tags/{version}/"
+    return "https://registry.hub.docker.com/v2/repositories/%s/tags/%s/" % (
+        name, version)
 
 
 class TestDockerHub(TestCase):

@@ -2,6 +2,7 @@
 # MIT License
 #
 # Copyright (c) 2018-2020 Franck Nijhof
+# Copyright (c) 2020 Andrey "Limych" Khrolenok
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +29,10 @@ This module extends the main PyGitHub class in order to add some extra
 functionality.
 """
 
+# pylint: disable=E0401,E0611
 from git import Repo
 from github import Github as PyGitHub
 from github import Repository
-from github.MainClass import DEFAULT_BASE_URL, DEFAULT_PER_PAGE, DEFAULT_TIMEOUT
 
 
 class GitHub(PyGitHub):
@@ -41,17 +42,19 @@ class GitHub(PyGitHub):
 
     def __init__(self, login_or_token=None):
         """Initialize a new GitHub object."""
-        super().__init__(login_or_token=login_or_token,)
+        super().__init__(login_or_token=login_or_token, )
         self.token = login_or_token
 
     def clone(self, repository: Repository, destination):
         """Clones a GitHub repository and returns a Git object."""
-        environ = {}
-        environ["GIT_ASKPASS"] = "repository-updater-git-askpass"
-        environ["GIT_USERNAME"] = self.token
-        environ["GIT_PASSWORD"] = ""
+        environ = {
+            "GIT_ASKPASS": "repository-updater-git-askpass",
+            "GIT_USERNAME": self.token,
+            "GIT_PASSWORD": "",
+        }
 
-        repo = Repo.clone_from(repository.clone_url, destination, None, environ)
+        repo = Repo.clone_from(
+            repository.clone_url, destination, None, environ)
 
         config = repo.config_writer()
         config.set_value("user", "email", self.get_user().email)
