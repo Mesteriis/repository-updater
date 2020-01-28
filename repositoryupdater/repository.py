@@ -167,8 +167,12 @@ class Repository:
             click.echo(crayons.cyan(f"Loading add-on {target}"))
             channels = [self.channel]
             if addon_config.get("channels"):
-                channels = [i.strip() for i in
-                            str(addon_config["channels"]).split(',')]
+                channels = [
+                    i for i in CHANNELS if i in {
+                        i.strip() for i in str(addon_config["channels"]).split(
+                            ',')
+                    }
+                ]
                 click.echo("Add-on channels: %s" % crayons.magenta(
                     ', '.join(channels)))
             for chl in channels:

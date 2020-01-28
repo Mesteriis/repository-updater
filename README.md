@@ -26,7 +26,7 @@ each add-on has its own GitHub repository.
 Using pip, the Python package manager:
 
 ```bash
-pip install repository-updater
+pip install hassio-repo-updater
 ```
 
 ## Usage
@@ -44,11 +44,17 @@ Options:
                                   The Hassio Addons repository to update
   --addon <TARGET>                Update a single/specific add-on
   --force                         Force an update of the add-on repository
+  --dryrun, --dry-run, --simulate
+                                  Do everything which is supposed to be done,
+                                  but don't write any changes. This is used to
+                                  see what would happen with the specified
+                                  action, without actually modifying anything.
   --version                       Show the version and exit.
   --help                          Show this message and exit.
 ```
 
 To get a GitHub token, please see the GitHub article: [Create a token][token]
+<!--
 
 ## Using Docker
 
@@ -67,6 +73,8 @@ For example, this shows the current version of the tool:
 ```bash
 docker run -it --rm hassioaddons/repository-updater:latest --version
 ```
+
+-->
 
 ## Add-ons Repository Configuration
 
@@ -99,6 +107,7 @@ addons:
     repository: hassio-addons/addon-pi-hole
     target: pi-hole
     image: hassioaddons/pi-hole-{arch}
+    channels: beta, stable
 ```
 
 The target in the add-ons repository is specified as the key for each add-on,
@@ -113,9 +122,13 @@ git repo that contains the actual add-on.
 `repository` specified the location of the add-on on GitHub. This must be
 in `organization/repository` or `username/repository` format.
 
-Finally, the `image` key defines the Docker container images on Docker Hub
+The `image` key defines the Docker container images on Docker Hub
 for this add-on. `{arch}` can be used as a placeholder for the architecture and
 is automatically replaced internally by the Repository Updater.
+
+Finally, you can add individual `channels` key for each add-on. This allows you
+to store several versions of add-ons in one repository at once. This way is
+convenient if you have your own repository with a small number of add-ons.
 
 ## Add-ons Repository README template
 
@@ -193,7 +206,7 @@ Nevertheless, there are some advantages using the alternative method:
 
 ## Known issues and limitations
 
-- Any kind of testing and linting... is missing...
+- Any kind of testing... is missing...
 
 ## Changelog & Releases
 
@@ -216,9 +229,6 @@ Got questions?
 You have several options to get them answered:
 
 - The Home Assistant [Community Forum][forum].
-- The Home Assistant [Discord Chat Server][discord] for general Home Assistant
-  discussions and questions.
-- Join the [Reddit subreddit][reddit] in [/r/homeassistant][reddit]
 
 You could also [open an issue here][issue] GitHub.
 
@@ -234,7 +244,8 @@ Thank you for being involved! :heart_eyes:
 
 ## Authors & contributors
 
-The original setup of this repository is by [Franck Nijhof][frenck].
+The original setup of this repository is by [Franck Nijhof][frenck] with major
+modifications by [Andrey "Limych" Khrolenok][limych].
 
 For a full list of all authors and contributors,
 check [the contributor's page][contributors].
@@ -250,7 +261,8 @@ our [GitHub Repository][repository].
 
 MIT License
 
-Copyright (c) 2018-2020 Franck Nijhof
+Copyright (c) 2018-2020 Franck Nijhof \
+Copyright (c) 2020 Andrey "Limych" Khrolenok
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -270,23 +282,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/hassio-addons/repository-updater.svg
-[commits]: https://github.com/hassio-addons/repository-updater/commits/master
-[contributors]: https://github.com/hassio-addons/repository-updater/graphs/contributors
-[discord-shield]: https://img.shields.io/discord/330944238910963714.svg
-[discord]: https://discord.gg/c5DvZ4e
+[commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/repository-updater.svg
+[commits]: https://github.com/Limych/repository-updater/commits/master
+[contributors]: https://github.com/Limych/repository-updater/graphs/contributors
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
 [forum]: https://community.home-assistant.io?u=frenck
 [frenck]: https://github.com/frenck
-[issue]: https://github.com/hassio-addons/repository-updater/issues
+[limych]: https://github.com/Limych
+[issue]: https://github.com/Limych/repository-updater/issues
 [keepchangelog]: http://keepachangelog.com/en/1.0.0/
-[license-shield]: https://img.shields.io/github/license/hassio-addons/repository-updater.svg
+[license-shield]: https://img.shields.io/github/license/Limych/repository-updater.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2020.svg
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
 [pypi-shield]: https://img.shields.io/pypi/v/repository-updater.svg
 [pypi]: https://pypi.org/project/repository-updater
-[reddit]: https://reddit.com/r/homeassistant
-[releases]: https://github.com/hassio-addons/repository-updater/releases
-[repository]: https://github.com/hassio-addons/repository
+[releases]: https://github.com/Limych/repository-updater/releases
+[repository]: https://github.com/Limych/repository
 [semver]: http://semver.org/spec/v2.0.0.html
 [token]: https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
