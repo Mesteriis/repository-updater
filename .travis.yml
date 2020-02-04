@@ -28,7 +28,7 @@ deploy:
   skip_existing: true
 after_deploy:
   - APP_VERSION=$(python -c "import sys; from repositoryupdater import APP_VERSION; sys.stdout.write(APP_VERSION)")
-  - DOCKER_IMAGE=$DOCKER_USERNAME/hassio-repo-updater
+  - DOCKER_IMAGE=$DOCKER_USERNAME/repository-updater
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t $DOCKER_IMAGE ./docker
   - docker images
