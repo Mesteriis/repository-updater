@@ -1,14 +1,18 @@
 language: python
+env:
+  global:
+    - DOCKER_USERNAME=limych
+    - secure: sxJHvo02IbdESumFeBOfI3bcsRYB/HaBH8aXtaULDeIhh7sJIOz6ZaemXfMh51i762O6RmAHDlogqZkxeVP2Y/k0HS4Qp2aXtuNQFCeS8jTUtB3/xfhv7ljRkwZPu6QnJyBH5DTwBtabVjLNk2Ozvjl3AuupnsVWwoJjNqc9BzCmlBK5aUfvHeAN8wvdOUJx5Mo5gqE4LJiJIHDALqXYjHvYJ9UND9APFGEsQ11BinzIR2a8IGsP5FfpO6TWKZiEK1yqPlZf+PgWLFk5wBYcJrDurh4eLR8bmekfUNRBqfEWL49a+5FIrKOGHAkilKa6G1rL+1tf72JcVXR7e0MzvkDz12VzsiAmES3Mc1gOAC2z89Am/hAht6dbLqxFtiaP4Jr5s0Vq0ViPzOb2XaNIztOzb+01frq85JQ7icHWr9e8feobIYeg9mKlyqfud0ddcmmzGDZ07bSvp95TRFMdJBjHAHl5IE4wLS+Byr2KAqgYNl9Z/7dTej5hnbtcazyQp37Ao/EmCjWkR9n8QdrZvcmv6ZhsZJch/qZ1VmYbiYq2GPD0S6QpPRfQHf2DbtxwxNATI22xwhNdIMcDkMqljhiWaJRaEDyJm4G1hZMAI63WKBMLhGcM2Jcn2sMB3QCyk729uZExSjVCHmir3sLl4ZYx6XVMpdw8nnxBAyNDz4o=
 jobs:
   include:
-  - python: '3.5'
-    env: TOXENV=py35
-  - python: '3.6'
-    env: TOXENV=py36
-  - python: '3.7'
-    env: TOXENV=py37
-  - python: '3.8'
-    env: TOXENV=lint
+    - python: '3.5'
+      env: TOXENV=py35
+    - python: '3.6'
+      env: TOXENV=py36
+    - python: '3.7'
+      env: TOXENV=py37
+    - python: '3.8'
+      env: TOXENV=lint
 install: pip install -U tox-travis coveralls
 script: tox
 cache: pip
@@ -16,9 +20,16 @@ after_success: coveralls
 deploy:
   provider: pypi
   skip_cleanup: true
-  user: "__token__"
+  user: __token__
   password:
     secure: NuogxDnVFm2IOAxEiKjpMm8Msnfuu+9Up9pN3cicMzl8f/Vqy0J9egRu0vVxew45qP6Emuf2Lxkp/1iofYZjOx2fk0oIBhNo2aA/C7dQ0jI2OcQ4t7vr1DPYdN1iuQcjfc6/iKbgYwXjRRv4yyq26ZSraqoMSGUdyyGNxrYWl3KIcRMgKxO1wdzwh4ckOkdqJcvBxp4gUeT/b6NOprhMcBtPEjhkyc5kdaidrD5079g3+kPcpdoFQwzQ67d7wVzC7LY0j+FFyXVJO8DvWNtd8hewIpaybWWF6NXp/0RyQb82KItFMtpaLMgs0+ZpDjsEr8dwdSJJrv6RCl3rHcZQiI+sWk2++giaPB3XHpW0w+EZyUfQGUpFwgC3EHtDrEQQaaAkV2oNM9CDK03sGI4bDv62A5Mlj70SKxRMBJ6VJ/mhEIgOLvCatpwIsaJKgIwpsjB8vLm6XeCXBdLCBgJfEkDE2j6mOsLvEmfTxUOqxvigcuqga8/i51Y3K/UBrRdQZG45bvDlbdeHNO/tB6qnVGK44op3nmDs7t1tW/OCngfD7nPYhHvMD2p3uDqZN2iiVmgcw6hIrQ3fWInj5QDWN3X8l9DTDZmJbScf/2kXIyzPNuPKFMUApQuC7vII5bHLsojmSfObUFVF+m7UOTJ3vWG+sfW0NAkaK+tu/OQuIT0=
   on:
     branch: master
   skip_existing: true
+after_deploy:
+  - APP_VERSION=$(python -c "import sys; from repositoryupdater import APP_VERSION; sys.stdout.write(APP_VERSION)")
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t hassio-repo-updater .
+  - docker images
+  - docker tag hassio-repo-updater $DOCKER_USERNAME/hassio-repo-updater:$APP_VERSION
+  - docker push $DOCKER_USERNAME/hassio-repo-updater
