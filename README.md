@@ -1,6 +1,7 @@
 # Community Hass.io Add-ons Repository Updater
 
 [![PyPi Release][pypi-shield]][pypi]
+[![Coverage Status][coverage-shield]][coverage]
 [![GitHub Activity][commits-shield]][commits]
 [![License][license-shield]](LICENSE.md)
 
@@ -63,14 +64,14 @@ can be quite useful when using this tool in a CI server like; Travis,
 CircleCI or GitLab CI.
 
 ```bash
-docker run -it --rm hassioaddons/repository-updater:latest
+docker run -it --rm limych/repository-updater:latest
 ```
 
 All the usage information parameters from the previous chapter apply.
 For example, this shows the current version of the tool:
 
 ```bash
-docker run -it --rm hassioaddons/repository-updater:latest --version
+docker run -it --rm limych/repository-updater:latest --version
 ```
 
 -->
@@ -284,6 +285,8 @@ SOFTWARE.
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/Limych/repository-updater.svg
 [commits]: https://github.com/Limych/repository-updater/commits/master
+[coverage-shield]: https://coveralls.io/repos/github/Limych/repository-updater/badge.svg?branch=master
+[coverage]: https://coveralls.io/github/Limych/repository-updater?branch=master
 [contributors]: https://github.com/Limych/repository-updater/graphs/contributors
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
 [forum]: https://community.home-assistant.io
