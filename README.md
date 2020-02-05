@@ -251,13 +251,6 @@ modifications by [Andrey "Limych" Khrolenok][limych].
 For a full list of all authors and contributors,
 check [the contributor's page][contributors].
 
-## We have got some Hass.io add-ons for you
-
-Want some more functionality to your Hass.io Home Assistant instance?
-
-We have created multiple add-ons for Hass.io. For a full list, check out
-our [GitHub Repository][repository].
-
 ## License
 
 MIT License
@@ -300,6 +293,5 @@ SOFTWARE.
 [pypi-shield]: https://img.shields.io/pypi/v/hassio-repo-updater.svg
 [pypi]: https://pypi.org/project/hassio-repo-updater
 [releases]: https://img.shields.io/github/tag-date/Limych/repository-updater?label=release
-[repository]: https://github.com/Limych/repository
 [semver]: http://semver.org/spec/v2.0.0.html
 [token]: https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
