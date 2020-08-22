@@ -50,8 +50,8 @@ from .repository import Repository
 )
 @click.option(
     "--repository",
-    prompt="Hassio Addons repository to update",
-    help="The Hassio Addons repository to update",
+    prompt="Home Assistant Addons repository to update",
+    help="The Home Assistant Addons repository to update",
     metavar="<orgname/reponame>",
 )
 @click.option("--addon", help="Update a single/specific add-on",
@@ -67,7 +67,7 @@ from .repository import Repository
 def repository_updater(token, repository, addon, force, dryrun=False):
     """Community Hass.io Add-ons Repository Updater."""
     click.echo(crayons.blue(APP_FULL_NAME, bold=True))
-    click.echo(crayons.blue("-" * 50, bold=True))
+    click.echo(crayons.blue("-" * 51, bold=True))
     if dryrun:
         click.echo(crayons.red("Dry Run Mode Enabled!", bold=True))
     github = GitHub(token)

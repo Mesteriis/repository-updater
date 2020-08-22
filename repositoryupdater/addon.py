@@ -25,7 +25,7 @@
 """
 Add-on Module.
 
-Represents / handles all Hass.io specific logic
+Represents / handles all Home Assistant add-on specific logic
 """
 
 # pylint: disable=E0401,E0611
@@ -36,20 +36,22 @@ import urllib.request
 
 import click
 import crayons
+import emoji
 import semver
+from dateutil.parser import parse
 from git import Repo
 from github.Commit import Commit
 from github.GitRelease import GitRelease
-from github.GithubException import UnknownObjectException
+from github.GithubException import GithubException, UnknownObjectException
 from github.Repository import Repository as GitRepository
-from jinja2 import Environment, BaseLoader
+from jinja2 import BaseLoader, Environment
 
 from .const import CHANNEL_BETA, CHANNEL_EDGE
 from .dockerhub import DockerHub
 
 
 class Addon:
-    """Object representing an Hass.io add-on."""
+    """Object representing an Home Assistant add-on."""
 
     repository: 'Repository'    # noqa: F821
     repository_target: str
@@ -175,8 +177,14 @@ class Addon:
             self.current_commit = self.addon_repository.get_commit(
                 ref.object.sha)
         else:
-            self.current_commit = self.addon_repository.get_commit(
-                self.current_version)
+            try:
+                self.current_commit = self.addon_repository.get_commit(
+                    f"v{self.current_version}"
+                )
+            except GithubException:
+                self.current_commit = self.addon_repository.get_commit(
+                    self.current_version
+                )
 
         click.echo(
             "Current version: %s (%s)"
@@ -330,6 +338,8 @@ class Addon:
         else:
             changelog += "- %s\n" % (self.current_commit.commit.message)
 
+        changelog = emoji.emojize(changelog, use_aliases=True)
+
         if not self.repository.dryrun:
             with open(
                     os.path.join(
@@ -348,6 +358,7 @@ class Addon:
         self.update_static_file("logo.png")
         self.update_static_file("icon.png")
         self.update_static_file("README.md")
+        self.update_static_file("DOCS.md")
 
     def update_static_file(self, file):
         """Download latest static file from add-on repository."""

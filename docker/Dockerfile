@@ -1,12 +1,12 @@
-FROM python:3.8-alpine3.11
+FROM python:3.8-alpine3.12
 
 # Setup base
 RUN \
     apk add --no-cache \
-        git=2.24.1-r0 \
+        git=2.26.2-r0 \
     \
     && pip3 install \
-        hassio-repo-updater==0.4.2
+        hassio-repo-updater==0.5.1
 
 # Entrypoint
 ENTRYPOINT ["repository-updater"]

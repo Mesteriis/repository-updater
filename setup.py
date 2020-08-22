@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 """
-Hass.io add-ons repository updater setup
+Home Assistant add-ons repository updater setup
 """
 import io
 import sys

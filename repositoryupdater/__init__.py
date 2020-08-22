@@ -28,15 +28,15 @@ Community Hass.io Add-ons Repository Updater.
 Reads remote add-on repositories, determines versions and generates
 changelogs to update the add-on repository fully automated.
 
-Mainly used by the Community Hass.io add-ons project.
+Mainly used by the Community Home Assistant Add-ons project.
 
 Please note, this program cannot be used with the general documented
-Hass.io add-on repository approach.
+Home Assistant add-on repository approach.
 """
 
 APP_NAME = "hassio-repo-updater"
 APP_FULL_NAME = "Community Hass.io Add-ons Repository Updater"
-APP_VERSION = "0.4.2"
+APP_VERSION = "0.5.1"
 APP_DESCRIPTION = __doc__
 
 __author__ = "Andrey Khrolenok"
