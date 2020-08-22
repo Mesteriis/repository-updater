@@ -34,9 +34,11 @@ Please note, this program cannot be used with the general documented
 Home Assistant add-on repository approach.
 """
 
+__version__ = "0.5.1"
+
 APP_NAME = "hassio-repo-updater"
 APP_FULL_NAME = "Community Hass.io Add-ons Repository Updater"
-APP_VERSION = "0.5.1"
+APP_VERSION = __version__
 APP_DESCRIPTION = __doc__
 
 __author__ = "Andrey Khrolenok"
@@ -45,10 +47,9 @@ __copyright__ = "Copyright 2020, Andrey Khrolenok; 2018-2020, Franck Nijhof"
 __license__ = "MIT"
 __url__ = "https://github.com/Limych/repository-updater"
 __download__ = (
-    "https://github.com/Limych/repository-updater/archive/" + APP_VERSION
+    "https://github.com/Limych/repository-updater/archive/" + __version__
     + ".tar.gz"
 )
-__version__ = APP_VERSION
 __keywords__ = [
     'hassio', 'hass.io', 'addons', 'repository', 'home assistant',
     'home-assistant', 'add-ons', 'limych'
