@@ -28,7 +28,7 @@ Add-on Module.
 Represents / handles all Home Assistant add-on specific logic
 """
 
-# pylint: disable=E0401,E0611
+# pylint: disable=import-error,no-name-in-module
 import json
 import os
 import sys
@@ -38,7 +38,6 @@ import click
 import crayons
 import emoji
 import semver
-from dateutil.parser import parse
 from git import Repo
 from github.Commit import Commit
 from github.GitRelease import GitRelease
@@ -53,7 +52,7 @@ from .dockerhub import DockerHub
 class Addon:
     """Object representing an Home Assistant add-on."""
 
-    repository: 'Repository'    # noqa: F821
+    repository: "Repository"  # noqa: F821
     repository_target: str
     addon_target: str
     image: str
@@ -75,15 +74,15 @@ class Addon:
     channel: str
 
     def __init__(
-            self,
-            repository: 'Repository',   # noqa: F821
-            git_repository: Repo,
-            repository_target: str,
-            image: str,
-            addon_repository: GitRepository,
-            addon_target: str,
-            channel: str,
-            updating: bool,
+        self,
+        repository: "Repository",  # noqa: F821
+        git_repository: Repo,
+        repository_target: str,
+        image: str,
+        addon_repository: GitRepository,
+        addon_target: str,
+        channel: str,
+        updating: bool,
     ):
         """Initialize a new Hass.io add-on object."""
         self.repository = repository
@@ -101,8 +100,7 @@ class Addon:
         self.latest_commit = None
 
         click.echo(
-            "Loading add-on information from: %s"
-            % self.addon_repository.html_url
+            "Loading add-on information from: %s" % self.addon_repository.html_url
         )
 
         self.__load_current_info()
@@ -110,8 +108,7 @@ class Addon:
             self.__load_latest_info(channel)
             if self.needs_update(False):
                 click.echo(
-                    crayons.yellow(
-                        "This add-on has an update waiting to be published!")
+                    crayons.yellow("This add-on has an update waiting to be published!")
                 )
             else:
                 click.echo(crayons.green("This add-on is up to date."))
@@ -120,8 +117,7 @@ class Addon:
         """Update this add-on inside the given add-on repository."""
         if not self.updating:
             click.echo(
-                crayons.red(
-                    "Cannot update add-on that was marked not being updated")
+                crayons.red("Cannot update add-on that was marked not being updated")
             )
             sys.exit(1)
 
@@ -130,9 +126,11 @@ class Addon:
         self.current_commit = self.latest_commit
 
         if not self.is_live():
-            click.echo(crayons.red(
-                "Not all Docker images are available on DockerHub aborting..."
-            ))
+            click.echo(
+                crayons.red(
+                    "Not all Docker images are available on DockerHub aborting..."
+                )
+            )
             sys.exit(1)
 
         self.ensure_addon_dir()
@@ -144,8 +142,7 @@ class Addon:
     def __load_current_info(self):
         """Load current add-on version information and current config."""
         current_config_file = os.path.join(
-            self.git_repository.working_dir, self.repository_target,
-            "config.json"
+            self.git_repository.working_dir, self.repository_target, "config.json"
         )
 
         if not os.path.isfile(current_config_file):
@@ -163,19 +160,17 @@ class Addon:
 
         if current_parsed_version:
             try:
-                ref = self.addon_repository.get_git_ref(
-                    "tags/" + self.current_version)
+                ref = self.addon_repository.get_git_ref("tags/" + self.current_version)
             except UnknownObjectException:
                 try:
                     ref = self.addon_repository.get_git_ref(
-                        "tags/v" + self.current_version)
+                        "tags/v" + self.current_version
+                    )
                 except UnknownObjectException:
-                    click.echo("Current version: %s" % crayons.yellow(
-                        "Not available"))
+                    click.echo("Current version: %s" % crayons.yellow("Not available"))
                     self.current_version = None
                     return False
-            self.current_commit = self.addon_repository.get_commit(
-                ref.object.sha)
+            self.current_commit = self.addon_repository.get_commit(ref.object.sha)
         else:
             try:
                 self.current_commit = self.addon_repository.get_commit(
@@ -188,9 +183,7 @@ class Addon:
 
         click.echo(
             "Current version: %s (%s)"
-            % (
-                crayons.magenta(self.current_version),
-                self.current_commit.sha[:7])
+            % (crayons.magenta(self.current_version), self.current_commit.sha[:7])
         )
 
         self.name = current_config["name"]
@@ -212,8 +205,7 @@ class Addon:
                 continue
             self.latest_release = release
             ref = self.addon_repository.get_git_ref("tags/" + release.tag_name)
-            self.latest_commit = self.addon_repository.get_commit(
-                ref.object.sha)
+            self.latest_commit = self.addon_repository.get_commit(ref.object.sha)
             break
 
         if not self.latest_release:
@@ -221,34 +213,34 @@ class Addon:
                 self.latest_version = tag.name.lstrip("v")
                 try:
                     prerelease = semver.parse_version_info(
-                        self.latest_version).prerelease
+                        self.latest_version
+                    ).prerelease
                 except ValueError:
                     continue
                 if prerelease and channel != CHANNEL_BETA:
                     continue
                 ref = self.addon_repository.get_git_ref("tags/" + tag.name)
-                self.latest_commit = self.addon_repository.get_commit(
-                    ref.object.sha)
+                self.latest_commit = self.addon_repository.get_commit(ref.object.sha)
                 self.latest_is_release = False
                 break
 
         if channel == CHANNEL_EDGE:
             last_commit = self.addon_repository.get_commits()[0]
-            if not self.latest_commit \
-                    or last_commit.sha != self.latest_commit.sha:
+            if not self.latest_commit or last_commit.sha != self.latest_commit.sha:
                 self.latest_version = last_commit.sha[:7]
                 self.latest_commit = last_commit
                 self.latest_is_release = False
 
         try:
             latest_config_file = self.addon_repository.get_contents(
-                os.path.join(self.addon_target, "config.json"),
-                self.latest_commit.sha
+                os.path.join(self.addon_target, "config.json"), self.latest_commit.sha
             )
             latest_config = json.loads(latest_config_file.decoded_content)
-            self.name = '%s (%s)' % (latest_config["name"], self.channel) \
-                if self.channel != self.repository.channel \
+            self.name = (
+                "{} ({})".format(latest_config["name"], self.channel)
+                if self.channel != self.repository.channel
                 else latest_config["name"]
+            )
             self.description = latest_config["description"]
             self.slug = latest_config["slug"]
             self.url = latest_config["url"]
@@ -265,9 +257,8 @@ class Addon:
             sys.exit(1)
 
         click.echo(
-            "Latest version: %s (%s)" % (
-                crayons.magenta(self.latest_version),
-                self.latest_commit.sha[:7])
+            "Latest version: %s (%s)"
+            % (crayons.magenta(self.latest_version), self.latest_commit.sha[:7])
         )
 
     def needs_update(self, force: bool):
@@ -280,8 +271,9 @@ class Addon:
 
     def ensure_addon_dir(self):
         """Ensure the add-on target directory exists."""
-        addon_path = os.path.join(self.git_repository.working_dir,
-                                  self.repository_target)
+        addon_path = os.path.join(
+            self.git_repository.working_dir, self.repository_target
+        )
 
         if not os.path.exists(addon_path):
             os.mkdir(addon_path)
@@ -291,8 +283,7 @@ class Addon:
         click.echo("Generating add-on configuration...", nl=False)
         try:
             config = self.addon_repository.get_contents(
-                os.path.join(self.addon_target, "config.json"),
-                self.current_commit.sha
+                os.path.join(self.addon_target, "config.json"), self.current_commit.sha
             )
         except UnknownObjectException:
             click.echo(crayons.red("Failed!"))
@@ -302,21 +293,24 @@ class Addon:
         config["version"] = self.current_version
         config["image"] = self.image
         if self.channel != self.repository.channel:
-            config["name"] += ' (%s)' % self.channel
-            config["slug"] += '__%s' % self.channel
+            config["name"] += " (%s)" % self.channel
+            config["slug"] += "__%s" % self.channel
 
         if not self.repository.dryrun:
             with open(
-                    os.path.join(
-                        self.git_repository.working_dir,
-                        self.repository_target,
-                        "config.json"
-                    ),
-                    "w",
+                os.path.join(
+                    self.git_repository.working_dir,
+                    self.repository_target,
+                    "config.json",
+                ),
+                "w",
             ) as outfile:
                 json.dump(
-                    config, outfile, ensure_ascii=False, indent=2,
-                    separators=(",", ": ")
+                    config,
+                    outfile,
+                    ensure_ascii=False,
+                    indent=2,
+                    separators=(",", ": "),
                 )
 
         click.echo(crayons.green("Done"))
@@ -331,8 +325,7 @@ class Addon:
             compare = self.addon_repository.compare(
                 self.current_release.tag_name, self.current_commit.sha
             )
-            changelog = "# Changelog since %s\n" \
-                        % self.current_release.tag_name
+            changelog = "# Changelog since %s\n" % self.current_release.tag_name
             for commit in reversed(compare.commits):
                 changelog += "- %s \n" % (commit.commit.message)
         else:
@@ -342,12 +335,12 @@ class Addon:
 
         if not self.repository.dryrun:
             with open(
-                    os.path.join(
-                        self.git_repository.working_dir,
-                        self.repository_target,
-                        "CHANGELOG.md"
-                    ),
-                    "w",
+                os.path.join(
+                    self.git_repository.working_dir,
+                    self.repository_target,
+                    "CHANGELOG.md",
+                ),
+                "w",
             ) as outfile:
                 outfile.write(changelog)
 
@@ -377,8 +370,7 @@ class Addon:
 
         if remote_file:
             if not self.repository.dryrun:
-                urllib.request.urlretrieve(
-                    remote_file.download_url, local_file)
+                urllib.request.urlretrieve(remote_file.download_url, local_file)
             click.echo(crayons.green("Done"))
         elif os.path.isfile(local_file):
             if not self.repository.dryrun:
@@ -390,17 +382,15 @@ class Addon:
     def is_live(self):
         """Check if the latest add-on version is actually on Docker Hub."""
         click.echo(
-            "Checking if all Docker images are available on Docker Hub...",
-            nl=False
+            "Checking if all Docker images are available on Docker Hub...", nl=False
         )
         for arch in self.archs:
             image = self.image.replace("{arch}", arch)
             if not DockerHub.image_exists_on_dockerhub(
-                    self.image.replace("{arch}", arch), self.current_version
+                self.image.replace("{arch}", arch), self.current_version
             ):
                 click.echo(
-                    crayons.red(
-                        "Missing: %s:%s" % (image, self.current_version))
+                    crayons.red(f"Missing: {image}:{self.current_version}")
                 )
                 return False
         click.echo(crayons.green("OK!"))
@@ -412,8 +402,7 @@ class Addon:
 
         addon_file = os.path.join(self.addon_target, ".README.j2")
         local_file = os.path.join(
-            self.git_repository.working_dir,
-            self.repository_target, "README.md"
+            self.git_repository.working_dir, self.repository_target, "README.md"
         )
 
         try:

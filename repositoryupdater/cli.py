@@ -28,7 +28,7 @@ CLI Module.
 Handles CLI for the Repository Updater
 """
 
-# pylint: disable=E0401,R1722
+# pylint: disable=import-error,consider-using-sys-exit
 from os import environ
 from sys import argv
 
@@ -54,15 +54,18 @@ from .repository import Repository
     help="The Home Assistant Addons repository to update",
     metavar="<orgname/reponame>",
 )
-@click.option("--addon", help="Update a single/specific add-on",
-              metavar="<TARGET>")
-@click.option("--force", is_flag=True,
-              help="Force an update of the add-on repository")
-@click.option("--dryrun", "--dry-run", "--simulate", is_flag=True,
-              help="Do everything which is supposed to be done, but don't "
-                   "write any changes. This is used to see what would happen "
-                   "with the specified action, without actually modifying "
-                   "anything.")
+@click.option("--addon", help="Update a single/specific add-on", metavar="<TARGET>")
+@click.option("--force", is_flag=True, help="Force an update of the add-on repository")
+@click.option(
+    "--dryrun",
+    "--dry-run",
+    "--simulate",
+    is_flag=True,
+    help="Do everything which is supposed to be done, but don't "
+    "write any changes. This is used to see what would happen "
+    "with the specified action, without actually modifying "
+    "anything.",
+)
 @click.version_option(APP_VERSION, prog_name=APP_FULL_NAME)
 def repository_updater(token, repository, addon, force, dryrun=False):
     """Community Hass.io Add-ons Repository Updater."""
@@ -92,8 +95,7 @@ def git_askpass():
         print(environ["GIT_USERNAME"])
         exit()
 
-    if argv[1] == "Password for 'https://" "%(GIT_USERNAME)s@github.com': " \
-            % environ:
+    if argv[1] == "Password for 'https://" "%(GIT_USERNAME)s@github.com': " % environ:
         print(environ["GIT_PASSWORD"])
         exit()
 

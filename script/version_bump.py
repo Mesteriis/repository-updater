@@ -49,7 +49,9 @@ def get_package_version(localpath, package):
         if return_value == "":
             try:
                 name = "VERSION"
-                return_value = getattr(__import__(f"..{package}", fromlist=[name]), name)
+                return_value = getattr(
+                    __import__(f"..{package}", fromlist=[name]), name
+                )
             except Exception as err:  # pylint: disable=broad-except
                 _LOGGER.debug(str(err))
     if return_value == "":
@@ -152,7 +154,7 @@ def bump_version(version, bump_type):
 
 def write_version(package_path, version, dry_run=False):
     """Update custom component constant file with new version."""
-    for suffix in ('__init__', 'const'):
+    for suffix in ("__init__", "const"):
         file_path = f"{package_path}/{suffix}.py"
         _LOGGER.debug("Try to change %s", file_path)
 
@@ -160,7 +162,9 @@ def write_version(package_path, version, dry_run=False):
             cur_content = content = fil.read()
 
         content = re.sub(r"\nVERSION = .*\n", f"\nVERSION = '{version}'\n", content)
-        content = re.sub(r"\n__version__ = .*\n", f"\n__version__ = '{version}'\n", content)
+        content = re.sub(
+            r"\n__version__ = .*\n", f"\n__version__ = '{version}'\n", content
+        )
 
         if cur_content != content:
             _LOGGER.debug("%s changed", file_path)
@@ -184,9 +188,13 @@ def main():
     parser.add_argument(
         "--commit", action="store_true", help="Create a version bump commit."
     )
-    parser.add_argument('package_dir', nargs='?', default=None, help="The path to package.")
     parser.add_argument(
-        "--dry-run", action="store_true", help="Preview version bumping without running it."
+        "package_dir", nargs="?", default=None, help="The path to package."
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview version bumping without running it.",
     )
     arguments = parser.parse_args()
 
@@ -200,7 +208,7 @@ def main():
 
     if arguments.package_dir is not None:
         package_dir = os.path.abspath(arguments.package_dir)
-        package = package_dir.split('/')[-1]
+        package = package_dir.split("/")[-1]
     else:
         package = None
         for current_path, dirs, _ in os.walk(f"{ROOT}/custom_components"):
@@ -219,8 +227,7 @@ def main():
     assert bumped > current, "BUG! New version is not newer than old version"
 
     if arguments.dry_run:
-        print(f"Current version: {current}\n"
-              f"    New version: {bumped}")
+        print(f"Current version: {current}\n" f"    New version: {bumped}")
 
     write_version(package_dir, bumped, arguments.dry_run)
 

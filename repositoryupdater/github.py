@@ -29,7 +29,7 @@ This module extends the main PyGitHub class in order to add some extra
 functionality.
 """
 
-# pylint: disable=E0401,E0611
+# pylint: disable=import-error,no-name-in-module
 from git import Repo
 from github import Github as PyGitHub
 from github import Repository
@@ -42,7 +42,7 @@ class GitHub(PyGitHub):
 
     def __init__(self, login_or_token=None):
         """Initialize a new GitHub object."""
-        super().__init__(login_or_token=login_or_token, )
+        super().__init__(login_or_token=login_or_token,)
         self.token = login_or_token
 
     def clone(self, repository: Repository, destination):
@@ -53,8 +53,7 @@ class GitHub(PyGitHub):
             "GIT_PASSWORD": "",
         }
 
-        repo = Repo.clone_from(
-            repository.clone_url, destination, None, environ)
+        repo = Repo.clone_from(repository.clone_url, destination, None, environ)
 
         config = repo.config_writer()
         config.set_value("user", "email", self.get_user().email)

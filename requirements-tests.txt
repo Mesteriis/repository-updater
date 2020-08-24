@@ -1,8 +1,14 @@
-coveralls
-flake8
-mock
-pylint
-pytest
-pytest-cov
-requests-mock
-tox
+-r requirements.txt
+-r requirements-pre-commit.txt
+asynctest~=0.13.0
+mock~=4.0
+mypy==0.782
+pre-commit~=2.7
+pylint~=2.6
+pylint-strict-informational==0.1
+pytest~=6.0
+pytest-aiohttp~=0.3.0
+pytest-timeout~=1.4
+pytest-sugar~=0.9
+requests-mock~=1.8
+tox~=3.19
