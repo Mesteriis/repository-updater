@@ -34,7 +34,7 @@ Please note, this program cannot be used with the general documented
 Home Assistant add-on repository approach.
 """
 
-__version__ = "0.5.1"
+__version__ = '0.5.2'
 
 APP_NAME = "hassio-repo-updater"
 APP_FULL_NAME = "Community Hass.io Add-ons Repository Updater"
