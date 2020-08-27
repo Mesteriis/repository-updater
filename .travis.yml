@@ -5,8 +5,6 @@ env:
     - secure: sxJHvo02IbdESumFeBOfI3bcsRYB/HaBH8aXtaULDeIhh7sJIOz6ZaemXfMh51i762O6RmAHDlogqZkxeVP2Y/k0HS4Qp2aXtuNQFCeS8jTUtB3/xfhv7ljRkwZPu6QnJyBH5DTwBtabVjLNk2Ozvjl3AuupnsVWwoJjNqc9BzCmlBK5aUfvHeAN8wvdOUJx5Mo5gqE4LJiJIHDALqXYjHvYJ9UND9APFGEsQ11BinzIR2a8IGsP5FfpO6TWKZiEK1yqPlZf+PgWLFk5wBYcJrDurh4eLR8bmekfUNRBqfEWL49a+5FIrKOGHAkilKa6G1rL+1tf72JcVXR7e0MzvkDz12VzsiAmES3Mc1gOAC2z89Am/hAht6dbLqxFtiaP4Jr5s0Vq0ViPzOb2XaNIztOzb+01frq85JQ7icHWr9e8feobIYeg9mKlyqfud0ddcmmzGDZ07bSvp95TRFMdJBjHAHl5IE4wLS+Byr2KAqgYNl9Z/7dTej5hnbtcazyQp37Ao/EmCjWkR9n8QdrZvcmv6ZhsZJch/qZ1VmYbiYq2GPD0S6QpPRfQHf2DbtxwxNATI22xwhNdIMcDkMqljhiWaJRaEDyJm4G1hZMAI63WKBMLhGcM2Jcn2sMB3QCyk729uZExSjVCHmir3sLl4ZYx6XVMpdw8nnxBAyNDz4o=
 jobs:
   include:
-    - python: '3.5'
-      env: TOXENV=py35
     - python: '3.6'
       env: TOXENV=py36
     - python: '3.7'
