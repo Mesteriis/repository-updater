@@ -100,7 +100,7 @@ class Addon:
         self.latest_commit = None
 
         click.echo(
-            "Loading add-on information from: %s" % self.addon_repository.html_url
+            f"Loading add-on information from: {self.addon_repository.html_url}"
         )
 
         self.__load_current_info()
@@ -146,7 +146,7 @@ class Addon:
         )
 
         if not os.path.isfile(current_config_file):
-            click.echo("Current version: %s" % crayons.yellow("Not available"))
+            click.echo(f'Current version: {crayons.yellow("Not available")}')
             return False
 
         current_config = json.load(open(current_config_file))
@@ -160,14 +160,12 @@ class Addon:
 
         if current_parsed_version:
             try:
-                ref = self.addon_repository.get_git_ref("tags/" + self.current_version)
+                ref = self.addon_repository.get_git_ref(f"tags/{self.current_version}")
             except UnknownObjectException:
                 try:
-                    ref = self.addon_repository.get_git_ref(
-                        "tags/v" + self.current_version
-                    )
+                    ref = self.addon_repository.get_git_ref(f"tags/v{self.current_version}")
                 except UnknownObjectException:
-                    click.echo("Current version: %s" % crayons.yellow("Not available"))
+                    click.echo(f'Current version: {crayons.yellow("Not available")}')
                     self.current_version = None
                     return False
             self.current_commit = self.addon_repository.get_commit(ref.object.sha)
@@ -182,8 +180,7 @@ class Addon:
                 )
 
         click.echo(
-            "Current version: %s (%s)"
-            % (crayons.magenta(self.current_version), self.current_commit.sha[:7])
+            f"Current version: {crayons.magenta(self.current_version)} ({self.current_commit.sha[:7]})"
         )
 
         self.name = current_config["name"]
@@ -204,7 +201,7 @@ class Addon:
             if release.draft or (prerelease and channel != CHANNEL_BETA):
                 continue
             self.latest_release = release
-            ref = self.addon_repository.get_git_ref("tags/" + release.tag_name)
+            ref = self.addon_repository.get_git_ref(f"tags/{release.tag_name}")
             self.latest_commit = self.addon_repository.get_commit(ref.object.sha)
             break
 
@@ -219,7 +216,7 @@ class Addon:
                     continue
                 if prerelease and channel != CHANNEL_BETA:
                     continue
-                ref = self.addon_repository.get_git_ref("tags/" + tag.name)
+                ref = self.addon_repository.get_git_ref(f"tags/{tag.name}")
                 self.latest_commit = self.addon_repository.get_commit(ref.object.sha)
                 self.latest_is_release = False
                 break
@@ -237,7 +234,7 @@ class Addon:
             )
             latest_config = json.loads(latest_config_file.decoded_content)
             self.name = (
-                "{} ({})".format(latest_config["name"], self.channel)
+                f'{latest_config["name"]} ({self.channel})'
                 if self.channel != self.repository.channel
                 else latest_config["name"]
             )
@@ -257,8 +254,7 @@ class Addon:
             sys.exit(1)
 
         click.echo(
-            "Latest version: %s (%s)"
-            % (crayons.magenta(self.latest_version), self.latest_commit.sha[:7])
+            f"Latest version: {crayons.magenta(self.latest_version)} ({self.latest_commit.sha[:7]})"
         )
 
     def needs_update(self, force: bool):
@@ -293,8 +289,8 @@ class Addon:
         config["version"] = self.current_version
         config["image"] = self.image
         if self.channel != self.repository.channel:
-            config["name"] += " (%s)" % self.channel
-            config["slug"] += "__%s" % self.channel
+            config["name"] += f" ({self.channel})"
+            config["slug"] += f"__{self.channel}"
 
         if not self.repository.dryrun:
             with open(
@@ -452,7 +448,7 @@ class Addon:
 
         try:
             semver.parse(self.current_version)
-            data["version"] = "v%s" % self.current_version
+            data["version"] = f"v{self.current_version}"
         except ValueError:
             data["version"] = self.current_version
 

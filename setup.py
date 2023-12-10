@@ -75,9 +75,7 @@ def load_requirements(filename: str) -> list:
     reqs = []
     with open(path, encoding="utf-8") as fptr:
         for i in fptr:
-            # pylint: disable=invalid-name
-            m = imp.match(i)
-            if m:
+            if m := imp.match(i):
                 reqs.extend(load_requirements(m.group(2)))
             else:
                 reqs.append(i)

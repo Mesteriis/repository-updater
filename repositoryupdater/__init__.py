@@ -34,6 +34,7 @@ Please note, this program cannot be used with the general documented
 Home Assistant add-on repository approach.
 """
 
+
 __version__ = "0.5.2"
 
 APP_NAME = "hassio-repo-updater"
@@ -46,9 +47,7 @@ __email__ = "andrey@khrolenok.ru"
 __copyright__ = "Copyright 2020, Andrey Khrolenok; 2018-2020, Franck Nijhof"
 __license__ = "MIT"
 __url__ = "https://github.com/Limych/repository-updater"
-__download__ = (
-    "https://github.com/Limych/repository-updater/archive/" + __version__ + ".tar.gz"
-)
+__download__ = f"https://github.com/Limych/repository-updater/archive/{__version__}.tar.gz"
 __keywords__ = [
     "hassio",
     "hass.io",

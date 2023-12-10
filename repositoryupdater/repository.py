@@ -70,7 +70,8 @@ class Repository:
         self.addons = []
 
         click.echo(
-            'Locating add-on repository "%s"...' % crayons.yellow(repository), nl=False
+            f'Locating add-on repository "{crayons.yellow(repository)}"...',
+            nl=False,
         )
         self.github_repository = github.get_repo(repository)
         click.echo(crayons.green("Found!"))
@@ -114,15 +115,9 @@ class Repository:
         self.generate_readme()
 
         if addon.latest_is_release:
-            message = ":tada: Release of add-on {} {}".format(
-                addon.name,
-                addon.current_version,
-            )
+            message = f":tada: Release of add-on {addon.name} {addon.current_version}"
         else:
-            message = ":arrow_up: Updating add-on {} to {}".format(
-                addon.name,
-                addon.current_version,
-            )
+            message = f":arrow_up: Updating add-on {addon.name} to {addon.current_version}"
         if self.force:
             message += " (forced update)"
 
@@ -153,16 +148,16 @@ class Repository:
         if config["channel"] not in CHANNELS:
             click.echo(
                 crayons.red(
-                    'Channel "%s" is not a valid channel identifier' % config["channel"]
+                    f'Channel "{config["channel"]}" is not a valid channel identifier'
                 )
             )
             sys.exit(1)
 
         self.channel = config["channel"]
-        click.echo("Repository channel: %s" % crayons.magenta(self.channel))
+        click.echo(f"Repository channel: {crayons.magenta(self.channel)}")
 
         if addon:
-            click.echo(crayons.yellow('Only updating addon "%s" this run!' % addon))
+            click.echo(crayons.yellow(f'Only updating addon "{addon}" this run!'))
 
         click.echo("Start loading repository add-ons:")
         for target, addon_config in config["addons"].items():
@@ -176,13 +171,13 @@ class Repository:
                     if i
                     in {i.strip() for i in str(addon_config["channels"]).split(",")}
                 ]
-                click.echo("Add-on channels: %s" % crayons.magenta(", ".join(channels)))
+                click.echo(f'Add-on channels: {crayons.magenta(", ".join(channels))}')
             for chl in channels:
                 self.addons.append(
                     Addon(
                         self,
                         self.git_repo,
-                        target + ("-" + chl if chl != self.channel else ""),
+                        target + (f"-{chl}" if chl != self.channel else ""),
                         addon_config["image"],
                         self.github.get_repo(addon_config["repository"]),
                         addon_config["target"],
@@ -215,8 +210,7 @@ class Repository:
 
         addon_data = []
         for addon in self.addons:
-            data = addon.get_template_data()
-            if data:
+            if data := addon.get_template_data():
                 addon_data.append(addon.get_template_data())
 
         addon_data = sorted(addon_data, key=lambda x: x["name"])
