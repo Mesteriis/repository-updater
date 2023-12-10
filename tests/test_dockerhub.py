@@ -17,10 +17,7 @@ def load_fixture(filename):
 
 def dockerhub_url(name, version):
     """Dockerhub URL."""
-    return "https://registry.hub.docker.com/v2/repositories/{}/tags/{}/".format(
-        name,
-        version,
-    )
+    return f"https://registry.hub.docker.com/v2/repositories/{name}/tags/{version}/"
 
 
 class TestDockerHub(TestCase):

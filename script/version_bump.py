@@ -29,9 +29,8 @@ def fallback_version(localpath):
     if os.path.isfile(localpath):
         with open(localpath) as local:
             ret = re.compile(r"^\b(VERSION|__version__)\s*=\s*['\"](.*)['\"]")
-            for line in local.readlines():
-                matcher = ret.match(line)
-                if matcher:
+            for line in local:
+                if matcher := ret.match(line):
                     return_value = str(matcher.group(2))
     return return_value
 
@@ -169,7 +168,7 @@ def write_version(package_path, version, dry_run=False):
         if cur_content != content:
             _LOGGER.debug("%s changed", file_path)
             if dry_run:
-                print("%s could was changed." % os.path.basename(file_path))
+                print(f"{os.path.basename(file_path)} could was changed.")
             else:
                 with open(file_path, "wt") as fil:
                     fil.write(content)
